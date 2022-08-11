@@ -5,7 +5,10 @@ COPY pom.xml .
 COPY src src
 RUN mvn package 
 
-FROM tomcat as stage
+FROM tomcat:alpine as stage
+RUN sed -i 's/port="8080"/port="11130"/' $CATALINA_HOME/conf/server.xml
 WORKDIR /usr/local/tomcat
 COPY --from=build test/target/* ./webapps/
-EXPOSE 8080
+#EXPOSE 8080
+EXPOSE 11130
+CMD ["catalina.sh", "run"]
